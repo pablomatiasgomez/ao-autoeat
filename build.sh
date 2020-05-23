@@ -1,0 +1,1 @@
+gcc -o AutoEat AutoEat.m -framework ApplicationServices -framework Foundation
