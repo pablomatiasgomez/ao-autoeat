@@ -78,8 +78,8 @@ static int const MAIN_WINDOW_END_Y = 560 / 2;
     [NSThread sleepForTimeInterval:2.0]; // 2s sleep
     doubleClick(VIRTUALBOX_X_OFFSET + INVENTORY_SECOND_COL_X, VIRTUALBOX_Y_OFFSET + INVENTORY_FIRST_ROW_Y); // Comida: 2 columna, 1 fila
     // Tomamos una pota roja.
-    [NSThread sleepForTimeInterval:2.0]; // 2s sleep
-    doubleClick(VIRTUALBOX_X_OFFSET + INVENTORY_FIRST_COL_X, VIRTUALBOX_Y_OFFSET + INVENTORY_SECOND_ROW_Y); // Pota roja: 1 columna, 2 fila
+    //[NSThread sleepForTimeInterval:2.0]; // 2s sleep
+    //doubleClick(VIRTUALBOX_X_OFFSET + INVENTORY_FIRST_COL_X, VIRTUALBOX_Y_OFFSET + INVENTORY_SECOND_ROW_Y); // Pota roja: 1 columna, 2 fila
 }
 
 void singleClick(int x, int y) {
