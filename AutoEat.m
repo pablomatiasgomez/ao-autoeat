@@ -8,7 +8,9 @@
 @implementation AutoEat {
 }
 
-static int const INTERVAL = 14 * 60;
+// A random number between these two will be used as interval
+static int const MIN_INTERVAL = 10 * 60;
+static int const MAX_INTERVAL = 17 * 60;
 /*
 // These are the normal parameters if the virtual box windows is 1:1 (800x600)
 static int const VIRTUALBOX_X_OFFSET = 440;
@@ -40,9 +42,10 @@ static int const MAIN_WINDOW_END_Y = 560 / 2;
 
     long startedSecs = time(NULL);
     long remainingSecs;
+    long interval = arc4random_uniform(MAX_INTERVAL - MIN_INTERVAL) + MIN_INTERVAL;
     while(true) {
         [NSThread sleepForTimeInterval:10.0]; // Count every ten seconds..
-        remainingSecs = INTERVAL - (time(NULL) - startedSecs);
+        remainingSecs = interval - (time(NULL) - startedSecs);
         printf("Remaining: %ld seconds\n", remainingSecs);
 
         // once in 20th times (200s), click on a random place in the map.
@@ -54,6 +57,8 @@ static int const MAIN_WINDOW_END_Y = 560 / 2;
         if (remainingSecs < 0) {
             [self eatAndDrink];
             startedSecs = time(NULL);
+            // Redefine interval
+            interval = arc4random_uniform(MAX_INTERVAL - MIN_INTERVAL) + MIN_INTERVAL;
         }
     }
 }
