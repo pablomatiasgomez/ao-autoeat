@@ -84,25 +84,27 @@ static int const MAIN_WINDOW_END_Y = 560 / 2;
 
 void singleClick(int x, int y) {
     printf("Single clicking at X: %d, Y:%d \n", x, y);
-    CGPoint pt;
-    pt.x = x;
-    pt.y = y;
-    click(pt);
+    click(CGPointMake(x, y), 1);
 }
 
 void doubleClick(int x, int y) {
     printf("Double clicking at X: %d, Y:%d \n", x, y);
-    CGPoint pt;
-    pt.x = x;
-    pt.y = y;
-    click(pt);
-    [NSThread sleepForTimeInterval:0.05]; // 50ms sleep
-    click(pt);
+    click(CGPointMake(x, y), 2);
 }
 
-void click(CGPoint pt) {
-    CGPostMouseEvent(pt, 1, 1, 1);
-    CGPostMouseEvent(pt, 1, 1, 0);
+void click(CGPoint pt, int clickCount) {
+    CGEventRef theEvent = CGEventCreateMouseEvent(NULL, kCGEventLeftMouseDown, pt, kCGMouseButtonLeft);
+    CGEventPost(kCGHIDEventTap, theEvent);
+    CGEventSetType(theEvent, kCGEventLeftMouseUp);
+    CGEventPost(kCGHIDEventTap, theEvent);
+    if (clickCount == 2) {
+        CGEventSetIntegerValueField(theEvent, kCGMouseEventClickState, 2);
+        CGEventSetType(theEvent, kCGEventLeftMouseDown);
+        CGEventPost(kCGHIDEventTap, theEvent);
+        CGEventSetType(theEvent, kCGEventLeftMouseUp);
+        CGEventPost(kCGHIDEventTap, theEvent);
+    }
+    CFRelease(theEvent);
 }
 
 @end
