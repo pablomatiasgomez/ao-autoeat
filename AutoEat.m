@@ -98,6 +98,7 @@ void click(CGPoint pt, int clickCount) {
     CGEventSetType(theEvent, kCGEventLeftMouseUp);
     CGEventPost(kCGHIDEventTap, theEvent);
     if (clickCount == 2) {
+        [NSThread sleepForTimeInterval:0.03];
         CGEventSetIntegerValueField(theEvent, kCGMouseEventClickState, 2);
         CGEventSetType(theEvent, kCGEventLeftMouseDown);
         CGEventPost(kCGHIDEventTap, theEvent);
