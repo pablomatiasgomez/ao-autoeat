@@ -79,7 +79,7 @@ static int const MAIN_WINDOW_END_Y = 560 / 2;
     [NSThread sleepForTimeInterval:2.0]; // 2s sleep
 
     // Comida: 1 columna, 1 fila
-    doubleClick(VIRTUALBOX_X_OFFSET + INVENTORY_FIRST_COL_X  + xRandomOffset, VIRTUALBOX_Y_OFFSET + INVENTORY_FIRST_ROW_Y  + yRandomOffset)
+    doubleClick(VIRTUALBOX_X_OFFSET + INVENTORY_FIRST_COL_X  + xRandomOffset, VIRTUALBOX_Y_OFFSET + INVENTORY_FIRST_ROW_Y  + yRandomOffset);
     [NSThread sleepForTimeInterval:2.0]; // 2s sleep
 
     // Comida: 2 columna, 1 fila
