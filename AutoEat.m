@@ -15,10 +15,10 @@ static int const MAX_INTERVAL = 17 * 60;
 // These are the normal parameters if the virtual box windows is 1:1 (800x600)
 static int const VIRTUALBOX_X_OFFSET = 440;
 static int const VIRTUALBOX_Y_OFFSET = 200;
-static int const INVENTORY_FIRST_ROW_Y = 180;
-static int const INVENTORY_SECOND_ROW_Y = 210;
-static int const INVENTORY_FIRST_COL_X = 610;
-static int const INVENTORY_SECOND_COL_X = 640;
+static int const INVENTORY_FIRST_ROW_Y = 194;
+static int const INVENTORY_SECOND_ROW_Y = 224;
+static int const INVENTORY_FIRST_COL_X = 612;
+static int const INVENTORY_SECOND_COL_X = 644;
 static int const MAIN_WINDOW_START_X = 20;
 static int const MAIN_WINDOW_END_X = 540;
 static int const MAIN_WINDOW_START_Y = 150;
@@ -27,10 +27,10 @@ static int const MAIN_WINDOW_END_Y = 560;
 // These are the offsets given that the virtual box window is 1:0.5 (400x300)
 static int const VIRTUALBOX_X_OFFSET = 440 + (400/2);
 static int const VIRTUALBOX_Y_OFFSET = 200 + (300/2);
-static int const INVENTORY_FIRST_ROW_Y = 180 / 2;
-static int const INVENTORY_SECOND_ROW_Y = 210 / 2;
-static int const INVENTORY_FIRST_COL_X = 610 / 2;
-static int const INVENTORY_SECOND_COL_X = 640 / 2;
+static int const INVENTORY_FIRST_ROW_Y = 194 / 2;
+static int const INVENTORY_SECOND_ROW_Y = 224 / 2;
+static int const INVENTORY_FIRST_COL_X = 612 / 2;
+static int const INVENTORY_SECOND_COL_X = 644 / 2;
 static int const MAIN_WINDOW_START_X = 20 / 2;
 static int const MAIN_WINDOW_END_X = 540 / 2;
 static int const MAIN_WINDOW_START_Y = 150 / 2;
@@ -73,13 +73,21 @@ static int const MAIN_WINDOW_END_Y = 560 / 2;
 
 -(void)eatAndDrink {
     printf("Eating and drinking!\n");
+    // Random offset to avoid clicking at the same place every time...
+    int xRandomOffset = arc4random_uniform(8) - 4;
+    int yRandomOffset = arc4random_uniform(8) - 4;
     [NSThread sleepForTimeInterval:2.0]; // 2s sleep
-    doubleClick(VIRTUALBOX_X_OFFSET + INVENTORY_FIRST_COL_X, VIRTUALBOX_Y_OFFSET + INVENTORY_FIRST_ROW_Y); // Comida: 1 columna, 1 fila
+
+    // Comida: 1 columna, 1 fila
+    doubleClick(VIRTUALBOX_X_OFFSET + INVENTORY_FIRST_COL_X  + xRandomOffset, VIRTUALBOX_Y_OFFSET + INVENTORY_FIRST_ROW_Y  + yRandomOffset)
     [NSThread sleepForTimeInterval:2.0]; // 2s sleep
-    doubleClick(VIRTUALBOX_X_OFFSET + INVENTORY_SECOND_COL_X, VIRTUALBOX_Y_OFFSET + INVENTORY_FIRST_ROW_Y); // Comida: 2 columna, 1 fila
-    // Tomamos una pota roja.
+
+    // Comida: 2 columna, 1 fila
+    doubleClick(VIRTUALBOX_X_OFFSET + INVENTORY_SECOND_COL_X + xRandomOffset, VIRTUALBOX_Y_OFFSET + INVENTORY_FIRST_ROW_Y  + yRandomOffset);
     [NSThread sleepForTimeInterval:2.0]; // 2s sleep
-    doubleClick(VIRTUALBOX_X_OFFSET + INVENTORY_FIRST_COL_X, VIRTUALBOX_Y_OFFSET + INVENTORY_SECOND_ROW_Y); // Pota roja: 1 columna, 2 fila
+
+    // Pota roja: 1 columna, 2 fila
+    doubleClick(VIRTUALBOX_X_OFFSET + INVENTORY_FIRST_COL_X  + xRandomOffset, VIRTUALBOX_Y_OFFSET + INVENTORY_SECOND_ROW_Y + yRandomOffset);
 }
 
 void singleClick(int x, int y) {
