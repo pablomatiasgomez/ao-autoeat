@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
 #import <ApplicationServices/ApplicationServices.h>
+#import <Cocoa/Cocoa.h>
 #include <stdlib.h>
 
 @interface AutoEat : NSObject
@@ -11,35 +12,39 @@
 // A random number between these two will be used as interval
 static int const MIN_INTERVAL = 10 * 60;
 static int const MAX_INTERVAL = 17 * 60;
-/*
-// These are the normal parameters if the virtual box windows is 1:1 (800x600)
-static int const VIRTUALBOX_X_OFFSET = 440;
-static int const VIRTUALBOX_Y_OFFSET = 200;
-static int const INVENTORY_FIRST_ROW_Y = 194;
-static int const INVENTORY_SECOND_ROW_Y = 224;
-static int const INVENTORY_FIRST_COL_X = 612;
-static int const INVENTORY_SECOND_COL_X = 644;
-static int const MAIN_WINDOW_START_X = 20;
-static int const MAIN_WINDOW_END_X = 540;
-static int const MAIN_WINDOW_START_Y = 150;
-static int const MAIN_WINDOW_END_Y = 560;
-*/
-// These are the offsets given that the virtual box window is 1:0.5 (400x300)
-static int const VIRTUALBOX_X_OFFSET = 440 + (400/2);
-static int const VIRTUALBOX_Y_OFFSET = 200 + (300/2);
-static int const INVENTORY_FIRST_ROW_Y = 194 / 2;
-static int const INVENTORY_SECOND_ROW_Y = 224 / 2;
-static int const INVENTORY_FIRST_COL_X = 612 / 2;
-static int const INVENTORY_SECOND_COL_X = 644 / 2;
-static int const MAIN_WINDOW_START_X = 20 / 2;
-static int const MAIN_WINDOW_END_X = 540 / 2;
-static int const MAIN_WINDOW_START_Y = 150 / 2;
-static int const MAIN_WINDOW_END_Y = 560 / 2;
+
+static int const VIRTUALBOX_SCREEN_SIZE_X = 400;
+static int const VIRTUALBOX_SCREEN_SIZE_Y = 300;
+
+/* These are based on a 800x600 screen so they need to be converted using the above props of the actual windows screen size */
+static int const INVENTORY_FIRST_ROW_Y = 194    * VIRTUALBOX_SCREEN_SIZE_X / 800;
+static int const INVENTORY_SECOND_ROW_Y = 224   * VIRTUALBOX_SCREEN_SIZE_Y / 600;
+static int const INVENTORY_FIRST_COL_X = 612    * VIRTUALBOX_SCREEN_SIZE_X / 800;
+static int const INVENTORY_SECOND_COL_X = 644   * VIRTUALBOX_SCREEN_SIZE_Y / 600;
+
+static int const MAIN_WINDOW_START_X = 20   * VIRTUALBOX_SCREEN_SIZE_X / 800;
+static int const MAIN_WINDOW_END_X = 540    * VIRTUALBOX_SCREEN_SIZE_X / 800;
+static int const MAIN_WINDOW_START_Y = 150  * VIRTUALBOX_SCREEN_SIZE_Y / 600;
+static int const MAIN_WINDOW_END_Y = 560    * VIRTUALBOX_SCREEN_SIZE_Y / 600;
+
+static int virtualBoxScreenStartX;
+static int virtualBoxScreenStartY;
+
+
++(void)initialize {
+    NSRect rect = [[NSScreen mainScreen] visibleFrame];
+    int screenWidth = (int) rect.size.width;
+    int screenHeight = (int) rect.size.height;
+    int menuBarHeight = [NSStatusBar systemStatusBar].thickness;
+
+    // The visibleFrame returns the application's widnows size (without the menun bar and the dock) so we need to then include the menuBarHeight.
+    virtualBoxScreenStartX = (screenWidth - VIRTUALBOX_SCREEN_SIZE_X) / 2;
+    virtualBoxScreenStartY = (screenHeight - VIRTUALBOX_SCREEN_SIZE_Y) / 2 + menuBarHeight;
+}
 
 
 -(id)init {
     printf("Starting AutoEat\n");
-
     long startedSecs = time(NULL);
     long remainingSecs;
     long interval = arc4random_uniform(MAX_INTERVAL - MIN_INTERVAL) + MIN_INTERVAL;
@@ -68,7 +73,7 @@ static int const MAIN_WINDOW_END_Y = 560 / 2;
     int randomY = arc4random_uniform(MAIN_WINDOW_END_Y - MAIN_WINDOW_START_Y) + MAIN_WINDOW_START_Y;
     printf("Clicking on random place at x: %d y: %d !\n", randomX, randomY);
     [NSThread sleepForTimeInterval:2.0]; // 2s sleep
-    singleClick(VIRTUALBOX_X_OFFSET + randomX, VIRTUALBOX_Y_OFFSET + randomY);
+    singleClick(virtualBoxScreenStartX + randomX, virtualBoxScreenStartY + randomY);
 }
 
 -(void)eatAndDrink {
@@ -79,15 +84,15 @@ static int const MAIN_WINDOW_END_Y = 560 / 2;
     [NSThread sleepForTimeInterval:2.0]; // 2s sleep
 
     // Comida: 1 columna, 1 fila
-    doubleClick(VIRTUALBOX_X_OFFSET + INVENTORY_FIRST_COL_X  + xRandomOffset, VIRTUALBOX_Y_OFFSET + INVENTORY_FIRST_ROW_Y  + yRandomOffset);
+    doubleClick(virtualBoxScreenStartX + INVENTORY_FIRST_COL_X  + xRandomOffset, virtualBoxScreenStartY + INVENTORY_FIRST_ROW_Y  + yRandomOffset);
     [NSThread sleepForTimeInterval:2.0]; // 2s sleep
 
     // Comida: 2 columna, 1 fila
-    doubleClick(VIRTUALBOX_X_OFFSET + INVENTORY_SECOND_COL_X + xRandomOffset, VIRTUALBOX_Y_OFFSET + INVENTORY_FIRST_ROW_Y  + yRandomOffset);
+    doubleClick(virtualBoxScreenStartX + INVENTORY_SECOND_COL_X + xRandomOffset, virtualBoxScreenStartY + INVENTORY_FIRST_ROW_Y  + yRandomOffset);
     [NSThread sleepForTimeInterval:2.0]; // 2s sleep
 
     // Pota roja: 1 columna, 2 fila
-    doubleClick(VIRTUALBOX_X_OFFSET + INVENTORY_FIRST_COL_X  + xRandomOffset, VIRTUALBOX_Y_OFFSET + INVENTORY_SECOND_ROW_Y + yRandomOffset);
+    doubleClick(virtualBoxScreenStartX + INVENTORY_FIRST_COL_X  + xRandomOffset, virtualBoxScreenStartY + INVENTORY_SECOND_ROW_Y + yRandomOffset);
 }
 
 void singleClick(int x, int y) {
