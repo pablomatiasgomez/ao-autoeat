@@ -98,11 +98,13 @@ static int virtualBoxScreenStartY;
 void singleClick(int x, int y) {
     printf("Single clicking at X: %d, Y:%d \n", x, y);
     click(CGPointMake(x, y), 1);
+    [NSThread sleepForTimeInterval:0.01];
 }
 
 void doubleClick(int x, int y) {
     printf("Double clicking at X: %d, Y:%d \n", x, y);
     click(CGPointMake(x, y), 2);
+    [NSThread sleepForTimeInterval:0.01];
 }
 
 void click(CGPoint pt, int clickCount) {
@@ -111,7 +113,7 @@ void click(CGPoint pt, int clickCount) {
     CGEventSetType(theEvent, kCGEventLeftMouseUp);
     CGEventPost(kCGHIDEventTap, theEvent);
     if (clickCount == 2) {
-        [NSThread sleepForTimeInterval:0.03];
+        [NSThread sleepForTimeInterval:0.05];
         CGEventSetIntegerValueField(theEvent, kCGMouseEventClickState, 2);
         CGEventSetType(theEvent, kCGEventLeftMouseDown);
         CGEventPost(kCGHIDEventTap, theEvent);
